@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SGPA Calculator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --muted-dark: #94a3b8;
+      --accent: #7c3aed;
+      --danger: #ff4d4d;
+      --bg-light: #f8fafc;
+      --text-light: #0f172a;
+      --muted-light: #475569;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      transition: all 0.3s ease;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 6px 30px rgba(2, 6, 23, 0.3);
+      transition: background 0.3s ease;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      text-align: center;
+    }
+
+    p {
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      gap: 10px;
+    }
+
+    button {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    button.add {
+      background-color: var(--accent);
+      color: #fff;
+    }
+
+    button.add:hover { opacity: 0.9; }
+
+    button.remove {
+      background: rgba(255, 255, 255, 0.08);
+      color: inherit;
+    }
+
+    button.mode-toggle {
+      background: transparent;
+      color: white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .light button.mode-toggle {
+      color: black;
+    }
+
+    button.mode-toggle:hover {
+      transform: rotate(20deg);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 500;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    td {
+      background: var(--row-bg);
+      border-radius: 8px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background-color: var(--input-bg);
+      color: inherit;
+      font-size: 14px;
+    }
+
+    select option { color: #000; }
+
+    .result {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      background: var(--result-bg);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .danger { color: var(--danger); font-weight: bold; }
+
+    @media (max-width: 600px) {
+      .result { flex-direction: column; }
+    }
+
+    /* Theme Handling */
+    body.dark {
+      --bg: linear-gradient(180deg, #071128 0%, #071a2a 100%);
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --text: #e6eef8;
+      --muted: var(--muted-dark);
+      --row-bg: rgba(255, 255, 255, 0.02);
+      --input-bg: rgba(255, 255, 255, 0.05);
+      --result-bg: rgba(124, 58, 237, 0.1);
+    }
+
+    body.light {
+      --bg: var(--bg-light);
+      --card-bg: #ffffff;
+      --text: var(--text-light);
+      --muted: var(--muted-light);
+      --row-bg: #f1f5f9;
+      --input-bg: #ffffff;
+      --result-bg: #ede9fe;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <div class="controls">
+      <h1>SGPA Calculator</h1>
+      <button id="modeToggle" class="mode-toggle" title="Toggle theme"><i class="bi bi-brightness-high"></i></button>
+    </div>
+    <p>Add or remove subjects, enter credits, and select grades to calculate your SGPA.</p>
+
+    <button id="addBtn" class="add">+ Add Subject</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Credits</th>
+          <th>Grade</th>
+          <th>Points</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="subjectBody"></tbody>
+    </table>
+
+    <div class="result">
+      <div>Total Credits: <span id="totalCredits">0</span></div>
+      <div>Total Points: <span id="totalPoints">0</span></div>
+      <div>SGPA: <span id="sgpa">0.00</span></div>
+    </div>
+  </div>
+
+  <script>
+    const gradePoints = { S: 10, A: 9, B: 8, C: 7, D: 6, E: 5, X: 0 };
+    const tbody = document.getElementById('subjectBody');
+    const addBtn = document.getElementById('addBtn');
+    const totalCreditsEl = document.getElementById('totalCredits');
+    const totalPointsEl = document.getElementById('totalPoints');
+    const sgpaEl = document.getElementById('sgpa');
+    const modeToggle = document.getElementById('modeToggle');
+    let subjectCount = 0;
+
+    function createRow() {
+      subjectCount++;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" class="subject" value="Subject ${subjectCount}"></td>
+        <td><input type="number" class="credits" min="0" value="3"></td>
+        <td>
+          <select class="grade">
+            ${Object.keys(gradePoints).map(g => `<option value="${g}">${g}</option>`).join('')}
+          </select>
+        </td>
+        <td class="points">0</td>
+        <td><button class="remove">Remove</button></td>
+      `;
+      tbody.appendChild(tr);
+
+      const creditsInput = tr.querySelector('.credits');
+      const gradeSelect = tr.querySelector('.grade');
+      const pointsCell = tr.querySelector('.points');
+      const removeBtn = tr.querySelector('.remove');
+
+      function update() {
+        const credits = parseFloat(creditsInput.value) || 0;
+        const grade = gradeSelect.value;
+        const gp = gradePoints[grade];
+
+        if (grade === 'X') {
+          pointsCell.textContent = 'N/A';
+          pointsCell.classList.add('danger');
+        } else {
+          pointsCell.textContent = (credits * gp).toFixed(2);
+          pointsCell.classList.remove('danger');
+        }
+        calculate();
+      }
+
+      creditsInput.addEventListener('input', update);
+      gradeSelect.addEventListener('change', update);
+      removeBtn.addEventListener('click', () => { tr.remove(); calculate(); });
+      update();
+    }
+
+    function calculate() {
+      let totalCredits = 0;
+      let totalPoints = 0;
+      let hasFail = false;
+
+      tbody.querySelectorAll('tr').forEach(tr => {
+        const credits = parseFloat(tr.querySelector('.credits').value) || 0;
+        const grade = tr.querySelector('.grade').value;
+        const gp = gradePoints[grade];
+
+        if (grade === 'X') {
+          hasFail = true;
+        } else {
+          totalCredits += credits;
+          totalPoints += credits * gp;
+        }
+      });
+
+      totalCreditsEl.textContent = totalCredits.toFixed(2);
+      totalPointsEl.textContent = totalPoints.toFixed(2);
+
+      if (hasFail) {
+        sgpaEl.textContent = 'N/A';
+        sgpaEl.classList.add('danger');
+      } else {
+        const sgpa = totalCredits === 0 ? 0 : totalPoints / totalCredits;
+        sgpaEl.textContent = sgpa.toFixed(2);
+        sgpaEl.classList.remove('danger');
+      }
+    }
+
+    addBtn.addEventListener('click', createRow);
+
+    // Theme toggle
+    modeToggle.addEventListener('click', () => {
+      const body = document.body;
+      body.classList.toggle('dark');
+      body.classList.toggle('light');
+      const icon = modeToggle.querySelector('i');
+      if (body.classList.contains('light')) {
+        icon.className = 'bi bi-moon';
+      } else {
+        icon.className = 'bi bi-brightness-high';
+      }
+    });
+
+    // Initialize with one subject
+    createRow();
+  </script>
+</body>
+</html>
