@@ -8,256 +8,430 @@
   <style>
     :root {
       --bg-dark: #0f172a;
+      --card-dark: #1e293b;
       --muted-dark: #94a3b8;
       --accent: #7c3aed;
-      --danger: #ff4d4d;
-      --bg-light: #f8fafc;
+      --accent-hover: #6d28d9;
+      --danger: #ef4444;
+      --bg-light: #f1f5f9;
+      --card-light: #ffffff;
       --text-light: #0f172a;
-      --muted-light: #475569;
+      --muted-light: #64748b;
+      --border-light: #e2e8f0;
     }
 
-    * { box-sizing: border-box; }
+    * { 
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      transition: all 0.3s ease;
       padding: 20px;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .container {
       width: 100%;
-      max-width: 900px;
+      max-width: 800px;
       background: var(--card-bg);
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 6px 30px rgba(2, 6, 23, 0.3);
-      transition: background 0.3s ease;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
     }
 
-    h1 {
-      margin: 0 0 8px;
-      font-size: 24px;
-      text-align: center;
-    }
-
-    p {
-      color: var(--muted);
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .controls {
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 24px;
+      font-size: 14px;
     }
 
     button {
-      padding: 8px 14px;
-      border-radius: 8px;
       border: none;
+      border-radius: 10px;
       cursor: pointer;
       font-weight: 500;
+      font-size: 14px;
       transition: all 0.2s ease;
+      font-family: inherit;
     }
 
-    button.add {
-      background-color: var(--accent);
-      color: #fff;
+    button:active {
+      transform: scale(0.98);
     }
 
-    button.add:hover { opacity: 0.9; }
-
-    button.remove {
-      background: rgba(255, 255, 255, 0.08);
-      color: inherit;
-    }
-
-    button.mode-toggle {
-      background: transparent;
-      color: white;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
+    .mode-toggle {
+      background: var(--toggle-bg);
+      color: var(--text);
+      width: 44px;
+      height: 44px;
       display: flex;
       justify-content: center;
       align-items: center;
       font-size: 20px;
-      transition: all 0.3s ease;
+      border-radius: 12px;
     }
 
-    .light button.mode-toggle {
-      color: black;
+    .mode-toggle:hover {
+      background: var(--toggle-hover);
+      transform: rotate(15deg);
     }
 
-    button.mode-toggle:hover {
-      transform: rotate(20deg);
-    }
-
-    table {
+    .add-btn {
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 8px;
+      justify-content: center;
     }
 
-    th, td {
-      padding: 10px;
-      text-align: left;
+    .add-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
     }
 
-    th {
+    .subjects-container {
+      margin-bottom: 24px;
+    }
+
+    .subject-row {
+      background: var(--row-bg);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: 40px 1fr 1fr 44px;
+      gap: 16px;
+      align-items: center;
+      transition: all 0.2s ease;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .subject-row:hover {
+      transform: translateX(4px);
+      box-shadow: var(--hover-shadow);
+    }
+
+    .serial {
+      font-weight: 600;
+      color: var(--muted);
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .input-label {
+      font-size: 12px;
       color: var(--muted);
       font-weight: 500;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    td {
-      background: var(--row-bg);
+    input[type="number"],
+    select {
+      background: var(--input-bg);
+      border: 2px solid var(--input-border);
       border-radius: 8px;
-    }
-
-    input, select {
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.2s ease;
       width: 100%;
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background-color: var(--input-bg);
-      color: inherit;
-      font-size: 14px;
     }
 
-    select option { color: #000; }
+    input[type="number"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--input-focus-bg);
+    }
 
-    .result {
-      margin-top: 20px;
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    select option {
+      background: var(--card-bg);
+      color: var(--text);
+    }
+
+    .remove-btn {
+      background: transparent;
+      color: var(--muted);
+      width: 44px;
+      height: 44px;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      padding: 0;
+    }
+
+    .remove-btn:hover {
+      color: var(--danger);
+      background: var(--danger-bg);
+      transform: scale(1.1);
+    }
+
+    .results {
       background: var(--result-bg);
-      border-radius: 10px;
-      padding: 16px;
+      border-radius: 16px;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+    }
+
+    .result-item {
       text-align: center;
-      gap: 10px;
     }
 
-    .danger { color: var(--danger); font-weight: bold; }
-
-    @media (max-width: 600px) {
-      .result { flex-direction: column; }
+    .result-label {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
     }
 
-    /* Theme Handling */
+    .result-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .result-value.sgpa {
+      background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .result-value.danger {
+      color: var(--danger);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    /* Dark theme */
     body.dark {
-      --bg: linear-gradient(180deg, #071128 0%, #071a2a 100%);
-      --card-bg: rgba(255, 255, 255, 0.03);
-      --text: #e6eef8;
-      --muted: var(--muted-dark);
-      --row-bg: rgba(255, 255, 255, 0.02);
-      --input-bg: rgba(255, 255, 255, 0.05);
+      --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --card-bg: #1e293b;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --row-bg: rgba(148, 163, 184, 0.05);
+      --input-bg: rgba(148, 163, 184, 0.05);
+      --input-border: rgba(148, 163, 184, 0.1);
+      --input-focus-bg: rgba(148, 163, 184, 0.08);
       --result-bg: rgba(124, 58, 237, 0.1);
+      --toggle-bg: rgba(148, 163, 184, 0.1);
+      --toggle-hover: rgba(148, 163, 184, 0.15);
+      --danger-bg: rgba(239, 68, 68, 0.1);
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      --hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
+    /* Light theme */
     body.light {
-      --bg: var(--bg-light);
+      --bg: #f1f5f9;
       --card-bg: #ffffff;
-      --text: var(--text-light);
-      --muted: var(--muted-light);
-      --row-bg: #f1f5f9;
+      --text: #0f172a;
+      --muted: #64748b;
+      --row-bg: #f8fafc;
       --input-bg: #ffffff;
+      --input-border: #e2e8f0;
+      --input-focus-bg: #ffffff;
       --result-bg: #ede9fe;
+      --toggle-bg: #f1f5f9;
+      --toggle-hover: #e2e8f0;
+      --danger-bg: rgba(239, 68, 68, 0.05);
+      --shadow: 0 10px 40px rgba(15, 23, 42, 0.08);
+      --hover-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 24px 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .subject-row {
+        grid-template-columns: 32px 1fr 44px;
+        gap: 12px;
+      }
+
+      .input-group:last-of-type {
+        grid-column: 1 / 3;
+      }
+
+      .results {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .result-value {
+        font-size: 28px;
+      }
     }
   </style>
 </head>
 <body class="dark">
   <div class="container">
-    <div class="controls">
+    <div class="header">
       <h1>SGPA Calculator</h1>
-      <button id="modeToggle" class="mode-toggle" title="Toggle theme"><i class="bi bi-brightness-high"></i></button>
+      <button id="modeToggle" class="mode-toggle" title="Toggle theme">
+        <i class="bi bi-brightness-high"></i>
+      </button>
     </div>
-    <p>Add or remove subjects, enter credits, and select grades to calculate your SGPA.</p>
+    <p class="subtitle">Add subjects, enter credits, and select grades to calculate your SGPA</p>
 
-    <button id="addBtn" class="add">+ Add Subject</button>
+    <button id="addBtn" class="add-btn">
+      <i class="bi bi-plus-circle"></i>
+      Add Subject
+    </button>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Subject</th>
-          <th>Credits</th>
-          <th>Grade</th>
-          <th>Points</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="subjectBody"></tbody>
-    </table>
+    <div id="subjectsContainer" class="subjects-container"></div>
 
-    <div class="result">
-      <div>Total Credits: <span id="totalCredits">0</span></div>
-      <div>Total Points: <span id="totalPoints">0</span></div>
-      <div>SGPA: <span id="sgpa">0.00</span></div>
+    <div class="results">
+      <div class="result-item">
+        <div class="result-label">Total Credits</div>
+        <div class="result-value" id="totalCredits">0</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Total Points</div>
+        <div class="result-value" id="totalPoints">0.00</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">SGPA</div>
+        <div class="result-value sgpa" id="sgpa">0.00</div>
+      </div>
     </div>
   </div>
 
   <script>
     const gradePoints = { S: 10, A: 9, B: 8, C: 7, D: 6, E: 5, X: 0 };
-    const tbody = document.getElementById('subjectBody');
+    const container = document.getElementById('subjectsContainer');
     const addBtn = document.getElementById('addBtn');
     const totalCreditsEl = document.getElementById('totalCredits');
     const totalPointsEl = document.getElementById('totalPoints');
     const sgpaEl = document.getElementById('sgpa');
     const modeToggle = document.getElementById('modeToggle');
-    let subjectCount = 0;
+
+    function updateSerials() {
+      Array.from(container.querySelectorAll('.subject-row')).forEach((row, i) => {
+        row.querySelector('.serial').textContent = i + 1;
+      });
+    }
 
     function createRow() {
-      subjectCount++;
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><input type="text" class="subject" value="Subject ${subjectCount}"></td>
-        <td><input type="number" class="credits" min="0" value="3"></td>
-        <td>
+      const row = document.createElement('div');
+      row.className = 'subject-row';
+      row.innerHTML = `
+        <div class="serial">1</div>
+        <div class="input-group">
+          <label class="input-label">Credits</label>
+          <input type="number" class="credits" min="0" step="0.5" value="3">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Grade</label>
           <select class="grade">
             ${Object.keys(gradePoints).map(g => `<option value="${g}">${g}</option>`).join('')}
           </select>
-        </td>
-        <td class="points">0</td>
-        <td><button class="remove">Remove</button></td>
+        </div>
+        <button class="remove-btn" title="Remove subject">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
       `;
-      tbody.appendChild(tr);
+      container.appendChild(row);
 
-      const creditsInput = tr.querySelector('.credits');
-      const gradeSelect = tr.querySelector('.grade');
-      const pointsCell = tr.querySelector('.points');
-      const removeBtn = tr.querySelector('.remove');
+      const creditsInput = row.querySelector('.credits');
+      const gradeSelect = row.querySelector('.grade');
+      const removeBtn = row.querySelector('.remove-btn');
 
-      function update() {
-        const credits = parseFloat(creditsInput.value) || 0;
-        const grade = gradeSelect.value;
-        const gp = gradePoints[grade];
+      creditsInput.addEventListener('input', calculate);
+      gradeSelect.addEventListener('change', calculate);
+      removeBtn.addEventListener('click', () => {
+        row.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+          row.remove();
+          updateSerials();
+          calculate();
+        }, 300);
+      });
 
-        if (grade === 'X') {
-          pointsCell.textContent = 'N/A';
-          pointsCell.classList.add('danger');
-        } else {
-          pointsCell.textContent = (credits * gp).toFixed(2);
-          pointsCell.classList.remove('danger');
-        }
-        calculate();
-      }
-
-      creditsInput.addEventListener('input', update);
-      gradeSelect.addEventListener('change', update);
-      removeBtn.addEventListener('click', () => { tr.remove(); calculate(); });
-      update();
+      updateSerials();
+      calculate();
     }
 
     function calculate() {
@@ -265,9 +439,9 @@
       let totalPoints = 0;
       let hasFail = false;
 
-      tbody.querySelectorAll('tr').forEach(tr => {
-        const credits = parseFloat(tr.querySelector('.credits').value) || 0;
-        const grade = tr.querySelector('.grade').value;
+      container.querySelectorAll('.subject-row').forEach(row => {
+        const credits = parseFloat(row.querySelector('.credits').value) || 0;
+        const grade = row.querySelector('.grade').value;
         const gp = gradePoints[grade];
 
         if (grade === 'X') {
@@ -278,16 +452,18 @@
         }
       });
 
-      totalCreditsEl.textContent = totalCredits.toFixed(2);
+      totalCreditsEl.textContent = totalCredits.toFixed(1);
       totalPointsEl.textContent = totalPoints.toFixed(2);
 
       if (hasFail) {
-        sgpaEl.textContent = 'N/A';
+        sgpaEl.textContent = 'FAIL';
         sgpaEl.classList.add('danger');
+        sgpaEl.classList.remove('sgpa');
       } else {
         const sgpa = totalCredits === 0 ? 0 : totalPoints / totalCredits;
         sgpaEl.textContent = sgpa.toFixed(2);
         sgpaEl.classList.remove('danger');
+        sgpaEl.classList.add('sgpa');
       }
     }
 
@@ -299,12 +475,20 @@
       body.classList.toggle('dark');
       body.classList.toggle('light');
       const icon = modeToggle.querySelector('i');
-      if (body.classList.contains('light')) {
-        icon.className = 'bi bi-moon';
-      } else {
-        icon.className = 'bi bi-brightness-high';
-      }
+      icon.className = body.classList.contains('light') ? 'bi bi-moon-fill' : 'bi bi-brightness-high';
     });
+
+    // Add slide out animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideOut {
+        to {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+      }
+    `;
+    document.head.appendChild(style);
 
     // Initialize with one subject
     createRow();
