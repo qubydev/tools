@@ -7,17 +7,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
     :root {
-      --bg-dark: #0f172a;
-      --card-dark: #1e293b;
-      --muted-dark: #94a3b8;
       --accent: #7c3aed;
       --accent-hover: #6d28d9;
       --danger: #ef4444;
-      --bg-light: #f1f5f9;
-      --card-light: #ffffff;
-      --text-light: #0f172a;
-      --muted-light: #64748b;
-      --border-light: #e2e8f0;
     }
 
     * {
@@ -28,13 +20,13 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
+      background: var(--bg);
+      color: var(--text);
     }
 
     .container {
@@ -42,69 +34,57 @@
       max-width: 800px;
       background: var(--card-bg);
       border-radius: 20px;
-      padding: 32px;
+      padding: 28px;
       box-shadow: var(--shadow);
     }
 
     h1 {
-      font-size: 28px;
-      font-weight: 700;
+      font-size: 26px;
       background: linear-gradient(135deg, var(--accent), #a78bfa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
     }
 
     .subtitle {
       color: var(--muted);
-      margin-bottom: 24px;
-      font-size: 14px;
+      margin-bottom: 20px;
     }
 
     .subjects-header {
       display: grid;
-      grid-template-columns: 40px 1fr 1fr 44px;
-      padding: 8px 4px 12px 4px;
-      color: var(--muted);
+      grid-template-columns: 1fr 1fr 1fr 44px;
+      padding: 6px 4px 10px 4px;
       font-size: 12px;
-      letter-spacing: .5px;
       text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: .5px;
       font-weight: 500;
     }
-
-    .subjects-header div:nth-child(1) { text-align: center; }
-    .subjects-header div:nth-child(4) { text-align: center; }
 
     .add-btn {
       background: var(--accent);
       color: white;
-      padding: 12px 24px;
-      margin-bottom: 20px;
+      padding: 10px 20px;
       border-radius: 10px;
+      margin-bottom: 16px;
       width: 100%;
+      border: none;
+      cursor: pointer;
       display: flex;
       justify-content: center;
       gap: 8px;
-      border: none;
-      cursor: pointer;
     }
-
-    .subjects-container { margin-bottom: 24px; }
 
     .subject-row {
       background: var(--row-bg);
       border-radius: 12px;
-      padding: 16px;
+      padding: 14px;
       margin-bottom: 12px;
       display: grid;
-      grid-template-columns: 40px 1fr 1fr 44px;
-      gap: 16px;
+      grid-template-columns: 1fr 1fr 1fr 44px;
+      gap: 12px;
       align-items: center;
-    }
-
-    .serial {
-      text-align: center;
-      color: var(--muted);
-      font-weight: 600;
     }
 
     input,
@@ -112,41 +92,37 @@
       background: var(--input-bg);
       border: 2px solid var(--input-border);
       border-radius: 8px;
-      padding: 10px 12px;
-      color: var(--text);
+      padding: 10px;
       font-size: 15px;
       width: 100%;
+      color: var(--text);
     }
 
     .remove-btn {
-      background: transparent;
       border: none;
+      background: transparent;
       font-size: 22px;
-      color: var(--muted);
       cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      color: var(--muted);
     }
 
     .results {
       background: var(--result-bg);
-      border-radius: 16px;
-      padding: 24px;
+      padding: 20px;
+      border-radius: 14px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(130px,1fr));
+      gap: 14px;
     }
 
     .result-label {
       color: var(--muted);
       font-size: 13px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .result-value {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 700;
     }
 
@@ -154,6 +130,10 @@
       background: linear-gradient(135deg, var(--accent), #a78bfa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    .result-value.danger {
+      color: var(--danger);
     }
 
     body.dark {
@@ -165,19 +145,28 @@
       --input-bg: rgba(148,163,184,.05);
       --input-border: rgba(148,163,184,.1);
       --result-bg: rgba(124,58,237,.1);
-      --shadow: 0 10px 40px rgba(0,0,0,.3);
+      --shadow: 0 12px 40px rgba(0,0,0,.3);
     }
 
     body.light {
       --bg: #f1f5f9;
-      --card-bg: #fff;
+      --card-bg: white;
       --text: #0f172a;
       --muted: #64748b;
       --row-bg: #f8fafc;
-      --input-bg: #fff;
+      --input-bg: white;
       --input-border: #e2e8f0;
       --result-bg: #ede9fe;
-      --shadow: 0 10px 40px rgba(15,23,42,.08);
+      --shadow: 0 10px 35px rgba(15,23,42,.1);
+    }
+
+    /* MOBILE IMPROVEMENTS */
+    @media (max-width: 640px) {
+      .container { padding: 18px; }
+      h1 { font-size: 22px; }
+      .subject-row { gap: 8px; padding: 10px; }
+      input, select { padding: 8px; font-size: 14px; }
+      .result-value { font-size: 26px; }
     }
   </style>
 </head>
@@ -186,12 +175,12 @@
   <div class="container">
 
     <h1>SGPA Calculator</h1>
-    <p class="subtitle">Add subjects, enter credits, and select grades to calculate your SGPA</p>
+    <p class="subtitle">Add subjects, select credits & grades, and calculate your SGPA</p>
 
     <button id="addBtn" class="add-btn"><i class="bi bi-plus-circle"></i>Add Subject</button>
 
     <div class="subjects-header">
-      <div>#</div>
+      <div>Subject</div>
       <div>Credits</div>
       <div>Grade</div>
       <div></div>
@@ -215,26 +204,31 @@
     const totalPointsEl = document.getElementById('totalPoints')
     const sgpaEl = document.getElementById('sgpa')
 
-    function updateSerials() {
-      Array.from(container.querySelectorAll('.subject-row')).forEach((row,i)=>row.querySelector('.serial').textContent=i+1)
+    function createCreditsOptions() {
+      let html = ""
+      for (let c = 1; c <= 5; c += 0.5) {
+        html += `<option value="${c}">${c}</option>`
+      }
+      return html
     }
 
     function createRow() {
       const row = document.createElement('div')
       row.className='subject-row'
+
       row.innerHTML=`
-        <div class="serial">1</div>
-        <input type="number" class="credits" min="0" step="0.5" value="3">
+        <input type="text" class="subj" placeholder="Subject Name">
+        <select class="credits">${createCreditsOptions()}</select>
         <select class="grade">${Object.keys(gradePoints).map(g=>`<option value="${g}">${g}</option>`).join('')}</select>
         <button class="remove-btn"><i class="bi bi-x-circle-fill"></i></button>
       `
+
       container.appendChild(row)
 
-      row.querySelector('.credits').addEventListener('input', calculate)
+      row.querySelector('.credits').addEventListener('change', calculate)
       row.querySelector('.grade').addEventListener('change', calculate)
-      row.querySelector('.remove-btn').addEventListener('click', ()=>{ row.remove(); updateSerials(); calculate() })
+      row.querySelector('.remove-btn').addEventListener('click', ()=>{ row.remove(); calculate() })
 
-      updateSerials()
       calculate()
     }
 
@@ -242,20 +236,28 @@
       let totalCredits=0, totalPoints=0, hasFail=false
 
       container.querySelectorAll('.subject-row').forEach(row=>{
-        const c=parseFloat(row.querySelector('.credits').value)||0
-        const g=row.querySelector('.grade').value
-        const p=gradePoints[g]
-        if(g==='X') hasFail=true
-        else{ totalCredits+=c; totalPoints+=c*p }
+        const credits=parseFloat(row.querySelector('.credits').value)||0
+        const grade=row.querySelector('.grade').value
+        const gp=gradePoints[grade]
+
+        if(grade==="X") hasFail=true
+        else{
+          totalCredits+=credits
+          totalPoints+=credits*gp
+        }
       })
 
       totalCreditsEl.textContent=totalCredits.toFixed(1)
       totalPointsEl.textContent=totalPoints.toFixed(2)
 
-      if(hasFail){ sgpaEl.textContent='FAIL'; sgpaEl.classList.remove('sgpa') }
-      else{
+      if(hasFail){
+        sgpaEl.textContent="FAIL"
+        sgpaEl.classList.remove("sgpa")
+        sgpaEl.classList.add("danger")
+      } else {
         sgpaEl.textContent=(totalCredits?totalPoints/totalCredits:0).toFixed(2)
-        sgpaEl.classList.add('sgpa')
+        sgpaEl.classList.remove("danger")
+        sgpaEl.classList.add("sgpa")
       }
     }
 
