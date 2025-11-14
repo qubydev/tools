@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -36,6 +37,30 @@
       border-radius: 20px;
       padding: 28px;
       box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: var(--row-bg);
+      border: 2px solid var(--input-border);
+      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--text);
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--input-bg);
+      transform: scale(1.05);
     }
 
     h1 {
@@ -111,7 +136,7 @@
       padding: 20px;
       border-radius: 14px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px,1fr));
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 14px;
     }
 
@@ -141,11 +166,11 @@
       --card-bg: #1e293b;
       --text: #f1f5f9;
       --muted: #94a3b8;
-      --row-bg: rgba(148,163,184,.05);
-      --input-bg: rgba(148,163,184,.05);
-      --input-border: rgba(148,163,184,.1);
-      --result-bg: rgba(124,58,237,.1);
-      --shadow: 0 12px 40px rgba(0,0,0,.3);
+      --row-bg: rgba(148, 163, 184, .05);
+      --input-bg: rgba(148, 163, 184, .05);
+      --input-border: rgba(148, 163, 184, .1);
+      --result-bg: rgba(124, 58, 237, .1);
+      --shadow: 0 12px 40px rgba(0, 0, 0, .3);
     }
 
     body.light {
@@ -157,53 +182,99 @@
       --input-bg: white;
       --input-border: #e2e8f0;
       --result-bg: #ede9fe;
-      --shadow: 0 10px 35px rgba(15,23,42,.1);
+      --shadow: 0 10px 35px rgba(15, 23, 42, .1);
     }
 
     /* MOBILE IMPROVEMENTS */
     @media (max-width: 640px) {
-      .container { padding: 18px; }
-      h1 { font-size: 22px; }
-      .subject-row { gap: 8px; padding: 10px; }
-      input, select { padding: 8px; font-size: 14px; }
-      .result-value { font-size: 26px; }
+      .container {
+        padding: 18px;
+      }
+
+      .theme-toggle {
+        top: 14px;
+        right: 14px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .subject-row {
+        gap: 8px;
+        padding: 10px;
+      }
+
+      input,
+      select {
+        padding: 8px;
+        font-size: 14px;
+      }
+
+      .result-value {
+        font-size: 26px;
+      }
     }
   </style>
 </head>
 
 <body class="dark">
   <div class="container">
-
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+      <i class="bi bi-sun-fill"></i>
+    </button>
     <h1>SGPA Calculator</h1>
     <p class="subtitle">Add subjects, select credits & grades, and calculate your SGPA</p>
-
     <button id="addBtn" class="add-btn"><i class="bi bi-plus-circle"></i>Add Subject</button>
-
     <div class="subjects-header">
       <div>Subject</div>
       <div>Credits</div>
       <div>Grade</div>
       <div></div>
     </div>
-
     <div id="subjectsContainer" class="subjects-container"></div>
-
     <div class="results">
-      <div><div class="result-label">Total Credits</div><div id="totalCredits" class="result-value">0</div></div>
-      <div><div class="result-label">Total Points</div><div id="totalPoints" class="result-value">0.00</div></div>
-      <div><div class="result-label">SGPA</div><div id="sgpa" class="result-value sgpa">0.00</div></div>
+      <div>
+        <div class="result-label">Total Credits</div>
+        <div id="totalCredits" class="result-value">0</div>
+      </div>
+      <div>
+        <div class="result-label">Total Points</div>
+        <div id="totalPoints" class="result-value">0.00</div>
+      </div>
+      <div>
+        <div class="result-label">SGPA</div>
+        <div id="sgpa" class="result-value sgpa">0.00</div>
+      </div>
     </div>
-
   </div>
-
   <script>
-    const gradePoints = { S:10, A:9, B:8, C:7, D:6, E:5, X:0 }
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle')
+    const body = document.body
+
+    themeToggle.addEventListener('click', () => {
+      if (body.classList.contains('dark')) {
+        body.classList.remove('dark')
+        body.classList.add('light')
+        themeToggle.innerHTML = '<i class="bi bi-moon-fill"></i>'
+      } else {
+        body.classList.remove('light')
+        body.classList.add('dark')
+        themeToggle.innerHTML = '<i class="bi bi-sun-fill"></i>'
+      }
+    })
+
+    // SGPA Calculator
+    const gradePoints = { S: 10, A: 9, B: 8, C: 7, D: 6, E: 5, X: 0 }
     const container = document.getElementById('subjectsContainer')
     const addBtn = document.getElementById('addBtn')
     const totalCreditsEl = document.getElementById('totalCredits')
     const totalPointsEl = document.getElementById('totalPoints')
     const sgpaEl = document.getElementById('sgpa')
-
     function createCreditsOptions() {
       let html = ""
       for (let c = 1; c <= 5; c += 0.5) {
@@ -211,58 +282,48 @@
       }
       return html
     }
-
     function createRow() {
       const row = document.createElement('div')
-      row.className='subject-row'
-
-      row.innerHTML=`
+      row.className = 'subject-row'
+      row.innerHTML = `
         <input type="text" class="subj" placeholder="Subject Name">
         <select class="credits">${createCreditsOptions()}</select>
-        <select class="grade">${Object.keys(gradePoints).map(g=>`<option value="${g}">${g}</option>`).join('')}</select>
+        <select class="grade">${Object.keys(gradePoints).map(g => `<option value="${g}">${g}</option>`).join('')}</select>
         <button class="remove-btn"><i class="bi bi-x-circle-fill"></i></button>
       `
-
       container.appendChild(row)
-
       row.querySelector('.credits').addEventListener('change', calculate)
       row.querySelector('.grade').addEventListener('change', calculate)
-      row.querySelector('.remove-btn').addEventListener('click', ()=>{ row.remove(); calculate() })
-
+      row.querySelector('.remove-btn').addEventListener('click', () => { row.remove(); calculate() })
       calculate()
     }
-
     function calculate() {
-      let totalCredits=0, totalPoints=0, hasFail=false
-
-      container.querySelectorAll('.subject-row').forEach(row=>{
-        const credits=parseFloat(row.querySelector('.credits').value)||0
-        const grade=row.querySelector('.grade').value
-        const gp=gradePoints[grade]
-
-        if(grade==="X") hasFail=true
-        else{
-          totalCredits+=credits
-          totalPoints+=credits*gp
+      let totalCredits = 0, totalPoints = 0, hasFail = false
+      container.querySelectorAll('.subject-row').forEach(row => {
+        const credits = parseFloat(row.querySelector('.credits').value) || 0
+        const grade = row.querySelector('.grade').value
+        const gp = gradePoints[grade]
+        if (grade === "X") hasFail = true
+        else {
+          totalCredits += credits
+          totalPoints += credits * gp
         }
       })
-
-      totalCreditsEl.textContent=totalCredits.toFixed(1)
-      totalPointsEl.textContent=totalPoints.toFixed(2)
-
-      if(hasFail){
-        sgpaEl.textContent="FAIL"
+      totalCreditsEl.textContent = totalCredits.toFixed(1)
+      totalPointsEl.textContent = totalPoints.toFixed(2)
+      if (hasFail) {
+        sgpaEl.textContent = "FAIL"
         sgpaEl.classList.remove("sgpa")
         sgpaEl.classList.add("danger")
       } else {
-        sgpaEl.textContent=(totalCredits?totalPoints/totalCredits:0).toFixed(2)
+        sgpaEl.textContent = (totalCredits ? totalPoints / totalCredits : 0).toFixed(2)
         sgpaEl.classList.remove("danger")
         sgpaEl.classList.add("sgpa")
       }
     }
-
     addBtn.addEventListener('click', createRow)
     createRow()
   </script>
 </body>
+
 </html>
